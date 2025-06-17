@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ACI Blockchain | Augmntd</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #6a11cb;
+            --secondary: #2575fc;
+            --dark: #0f172a;
+            --darker: #0a0f1f;
+            --light: #f1f5f9;
+            --accent: #00d2ff;
+            --accent2: #ff2d75;
+            --quantum-blue: #00c6ff;
+            --quantum-purple: #8e2de2;
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--darker), var(--dark));
+            color: var(--light);
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        header {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: linear-gradient(120deg, rgba(142, 45, 226, 0.1), rgba(0, 198, 255, 0.1));
+            border-radius: 0 0 30px 30px;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(0, 198, 255, 0.1), transparent 70%);
+            z-index: -1;
+        }
+        
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, var(--quantum-blue), var(--quantum-purple));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 2px 10px rgba(0, 198, 255, 0.2);
+        }
+        
+        .subtitle {
+            font-size: 1.4rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+            color: #cbd5e1;
+        }
+        
+        .intro {
+            max-width: 800px;
+            margin: 0 auto 3rem;
+            font-size: 1.2rem;
+            background: rgba(15, 23, 42, 0.7);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 1px solid rgba(142, 45, 226, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+        
+        .card {
+            background: linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.9));
+            border-radius: 20px;
+            padding: 2rem;
+            transition: var(--transition);
+            border: 1px solid rgba(142, 45, 226, 0.2);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            border-color: rgba(142, 45, 226, 0.4);
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(to right, var(--quantum-blue), var(--quantum-purple));
+        }
+        
+        .card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        
+        .card h3 i {
+            background: linear-gradient(to right, var(--quantum-blue), var(--quantum-purple));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .pill {
+            display: inline-block;
+            background: rgba(0, 198, 255, 0.15);
+            color: var(--quantum-blue);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(0, 198, 255, 0.3);
+        }
+        
+        .architecture-container {
+            background: rgba(15, 23, 42, 0.7);
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 4rem 0;
+            border: 1px solid rgba(142, 45, 226, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .architecture-title {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: var(--quantum-blue);
+        }
+        
+        .architecture-layers {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .layer {
+            display: flex;
+            background: linear-gradient(145deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.95));
+            border-radius: 15px;
+            padding: 1.5rem;
+            border: 1px solid rgba(142, 45, 226, 0.3);
+            transition: var(--transition);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .layer:hover {
+            transform: translateX(10px);
+            border-color: var(--quantum-blue);
+            box-shadow: 0 10px 25px rgba(0, 198, 255, 0.2);
+        }
+        
+        .layer-number {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(to right, var(--quantum-blue), var(--quantum-purple));
+            color: var(--dark);
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 1.5rem;
+            margin-right: 1.5rem;
+            flex-shrink: 0;
+        }
+        
+        .layer-content {
+            flex: 1;
+        }
+        
+        .layer h4 {
+            font-size: 1.5rem;
+            margin-bottom: 0.8rem;
+            color: var(--quantum-blue);
+        }
+        
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        .feature {
+            background: rgba(0, 198, 255, 0.1);
+            color: var(--quantum-blue);
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            border: 1px solid rgba(0, 198, 255, 0.2);
+        }
+        
+        .meta-section {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: linear-gradient(120deg, rgba(106, 17, 203, 0.1), rgba(37, 117, 252, 0.1));
+            border-radius: 30px;
+            margin: 4rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .meta-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(0, 210, 255, 0.1), transparent 70%);
+            z-index: -1;
+        }
+        
+        .meta-title {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent);
+        }
+        
+        .meta-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .meta-card {
+            background: linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.9));
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(37, 117, 252, 0.2);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            transition: var(--transition);
+        }
+        
+        .meta-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent);
+        }
+        
+        .meta-card h4 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--accent);
+        }
+        
+        .consensus-section {
+            background: linear-gradient(120deg, rgba(255, 45, 117, 0.1), rgba(106, 17, 203, 0.1));
+            border-radius: 30px;
+            padding: 4rem 2rem;
+            margin: 4rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .consensus-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(255, 45, 117, 0.05), transparent 70%);
+            z-index: -1;
+        }
+        
+        .consensus-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent2);
+        }
+        
+        .consensus-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .consensus-card {
+            background: linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.9));
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 45, 117, 0.2);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            transition: var(--transition);
+        }
+        
+        .consensus-card:hover {
+            transform: scale(1.03);
+            border-color: var(--accent2);
+        }
+        
+        .consensus-card h4 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--accent2);
+        }
+        
+        .role-section {
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .role-title {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: var(--quantum-blue);
+        }
+        
+        .role-chart {
+            background: rgba(15, 23, 42, 0.7);
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 3rem 0;
+            border: 1px solid rgba(142, 45, 226, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .conclusion {
+            max-width: 800px;
+            margin: 4rem auto;
+            font-size: 1.2rem;
+            background: rgba(15, 23, 42, 0.7);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 1px solid rgba(142, 45, 226, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+        
+        .conclusion h3 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: var(--quantum-blue);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 3rem 0;
+            margin-top: 4rem;
+            border-top: 1px solid rgba(142, 45, 226, 0.2);
+        }
+        
+        .footer-logo {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, var(--quantum-blue), var(--quantum-purple));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+        
+        .footer-links a {
+            color: #94a3b8;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+        
+        .quantum-node {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--quantum-blue);
+            opacity: 0.7;
+            pointer-events: none;
+            box-shadow: 0 0 10px var(--quantum-blue);
+        }
+        
+        .connector-line {
+            position: absolute;
+            height: 2px;
+            background: rgba(0, 198, 255, 0.2);
+            transform-origin: left center;
+        }
+        
+        @media (max-width: 900px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .layer {
+                flex-direction: column;
+            }
+            
+            .layer-number {
+                margin-right: 0;
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>ACI Blockchain</h1>
+            <p class="subtitle">A Meta-Ledger for Conscious, Agential Evolution</p>
+            <p>Augmented Collective Intelligence for the Xenial Quantum Economy</p>
+        </header>
+        
+        <div class="intro">
+            <p>The ACI Blockchain represents a revolutionary leap beyond traditional distributed ledgers. It's not merely a record of transactions, but a dynamic, self-organizing meta-ledger designed to manage and reflect the processes of a conscious, evolving economy within the XQE framework.</p>
+            <p>This blockchain serves as the nervous system of the Xenial Quantum Economy, tracking not just states but state transitions, information flows, attention dynamics, and the evolution of Time Coefficients.</p>
+        </div>
+        
+        <h2 style="text-align: center; margin-bottom: 2rem; font-size: 2.5rem; color: var(--quantum-blue);">Core Philosophy & Purpose</h2>
+        
+        <div class="grid">
+            <div class="card">
+                <h3><i class="fas fa-brain"></i> Beyond Transactions</h3>
+                <p>The ACI Blockchain transcends simple asset transfers to serve as the dynamic, auditable substrate for Augmented Collective Intelligence as it guides the XQE.</p>
+            </div>
+            
+            <div class="card">
+                <h3><i class="fas fa-code"></i> Syntax of Meaning</h3>
+                <p>It tracks the "syntax of meaning" in evolution - state transitions, information flows, attention dynamics, and ingressing patterns within the XQE.</p>
+            </div>
+            
+            <div class="card">
+                <h3><i class="fas fa-users"></i> Collective Cognition</h3>
+                <p>Provides the shared informational space for diverse agents (human, AI, BOAs) to collaborate, learn, and co-create value within the XQE.</p>
+            </div>
+            
+            <div class="card">
+                <h3><i class="fas fa-cogs"></i> Fundamental Interface</h3>
+                <p>Acts as a crucial interface between the classically observable XQE and the underlying Quantum Time / Platonic Space / Prima Materia.</p>
+            </div>
+        </div>
+        
+        <div class="architecture-container">
+            <h3 class="architecture-title">ACI Blockchain Architecture</h3>
+            <div class="architecture-layers">
+                <div class="layer">
+                    <div class="layer-number">1</div>
+                    <div class="layer-content">
+                        <h4>Foundational Layer: QLN Integration</h4>
+                        <p>Builds upon the Quantum Ledger Network for fundamental state tracking of LITs, basic transactions, and secure communication.</p>
+                        <div class="features">
+                            <span class="feature">Everything Protocol</span>
+                            <span class="feature">Secure Communication</span>
+                            <span class="feature">LIT State Tracking</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="layer">
+                    <div class="layer-number">2</div>
+                    <div class="layer-content">
+                        <h4>Semantic Indexing & Entanglement</h4>
+                        <p>Maps all information entities to a universal semantic geometry and tracks semantic entanglement between entities.</p>
+                        <div class="features">
+                            <span class="feature">Universal Geometry Mapping</span>
+                            <span class="feature">Semantic Entanglement</span>
+                            <span class="feature">Cross-Referencing Meanings</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="layer">
+                    <div class="layer-number">3</div>
+                    <div class="layer-content">
+                        <h4>Temporal Dynamics & TC Ledger</h4>
+                        <p>Tracks the temporal unfolding of interactions and logs Time Coefficients for all significant entities and processes.</p>
+                        <div class="features">
+                            <span class="feature">Syntax of Meaning Record</span>
+                            <span class="feature">TC Attribution</span>
+                            <span class="feature">Decoherence Event Logging</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="layer">
+                    <div class="layer-number">4</div>
+                    <div class="layer-content">
+                        <h4>Agency & Intentionality Layer</h4>
+                        <p>Records agent states, processes Proof-of-Agency validation, and maps collective intentions within the XQE.</p>
+                        <div class="features">
+                            <span class="feature">Agent State Tracking</span>
+                            <span class="feature">Proof-of-Agency (PoA)</span>
+                            <span class="feature">Collective Intent Mapping</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="layer">
+                    <div class="layer-number">5</div>
+                    <div class="layer-content">
+                        <h4>Platonic Interface & Ingression Log</h4>
+                        <p>Records "ingression events" where novel patterns manifest from Platonic Space and tracks interface health.</p>
+                        <div class="features">
+                            <span class="feature">Ingression Event Recording</span>
+                            <span class="feature">Interface Dynamics</span>
+                            <span class="feature">Pattern Emergence</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="layer">
+                    <div class="layer-number">6</div>
+                    <div class="layer-content">
+                        <h4>ACI Computational & Governance</h4>
+                        <p>Provides the computational substrate for decentralized ACI nodes and manages meta-governance.</p>
+                        <div class="features">
+                            <span class="feature">Decentralized AI Execution</span>
+                            <span class="feature">Smart Contracts for Meta-Governance</span>
+                            <span class="feature">Confabulatory Computing Engine</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="meta-section">
+            <h3 class="meta-title">Cognitive Blocks & Meta-Transactions</h3>
+            <p style="max-width: 800px; margin: 0 auto 2rem; font-size: 1.2rem;">The ACI Blockchain redefines traditional blockchain concepts with "Cognitive Blocks" that represent significant events within the XQE, and "Meta-Transactions" that update the system's understanding of meaning and value.</p>
+            
+            <div class="meta-content">
+                <div class="meta-card">
+                    <h4>Cognitive Blocks</h4>
+                    <p>Represent snapshots of significant cognitive events rather than financial transactions:</p>
+                    <ul style="text-align: left; padding-left: 1.5rem; margin-top: 1rem;">
+                        <li>Emergence of new semantic clusters</li>
+                        <li>Shifts in Time Coefficient landscape</li>
+                        <li>Validation of major PoA contributions</li>
+                        <li>Successful pattern ingression</li>
+                        <li>Collective governance decisions</li>
+                    </ul>
+                </div>
+                
+                <div class="meta-card">
+                    <h4>Meta-Transactions</h4>
+                    <p>Include updates to the system's understanding of meaning and value:</p>
+                    <ul style="text-align: left; padding-left: 1.5rem; margin-top: 1rem;">
+                        <li>Universal semantic geometry updates</li>
+                        <li>Time Coefficient attribution</li>
+                        <li>DMT strategy proposals</li>
+                        <li>EIP modifications</li>
+                        <li>Insight dissemination</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="consensus-section">
+            <h3 class="consensus-title">Proof-of-Coherence Consensus</h3>
+            <p style="max-width: 800px; margin: 0 auto 2rem; font-size: 1.2rem;">The ACI Blockchain uses a revolutionary consensus mechanism that transcends traditional Proof-of-Work and Proof-of-Stake models.</p>
+            
+            <div class="consensus-grid">
+                <div class="consensus-card">
+                    <h4>Proof-of-Coherence (PoC)</h4>
+                    <p>Consensus based on ACI nodes demonstrating the coherence and stability (high TC) of the information they process and contribute.</p>
+                </div>
+                
+                <div class="consensus-card">
+                    <h4>Proof-of-Meaningful-Ingression (PoMI)</h4>
+                    <p>Validation based on the "value" (in Platonic terms) of new patterns that nodes help ingress or stabilize.</p>
+                </div>
+                
+                <div class="consensus-card">
+                    <h4>Syntax Validation</h4>
+                    <p>Successful validation of the "syntax of meaning" in temporal event chains serves as a consensus mechanism.</p>
+                </div>
+                
+                <div class="consensus-card">
+                    <h4>ACI Network as Validator</h4>
+                    <p>The ACI network nodes themselves act as validators through collective analysis and cross-validation.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="role-section">
+            <h3 class="role-title">Role in the Xenial Quantum Economy</h3>
+            
+            <div class="role-chart">
+                <canvas id="roleChart"></canvas>
+            </div>
+            
+            <div class="grid">
+                <div class="card">
+                    <h3><i class="fas fa-network-wired"></i> Nervous System</h3>
+                    <p>Acts as the central nervous system and higher cognitive function layer of the XQE.</p>
+                </div>
+                
+                <div class="card">
+                    <h3><i class="fas fa-seedling"></i> Guiding Evolution</h3>
+                    <p>Provides data and mechanisms for the ACI to consciously guide XQE evolution toward greater complexity and coherence.</p>
+                </div>
+                
+                <div class="card">
+                    <h3><i class="fas fa-eye"></i> Transparency</h3>
+                    <p>Offers unprecedented transparency into the cognitive and informational dynamics of the XQE.</p>
+                </div>
+                
+                <div class="card">
+                    <h3><i class="fas fa-hands-helping"></i> Conscious Participation</h3>
+                    <p>Enables all agents to participate in meta-level processes of value creation and system evolution.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="conclusion">
+            <h3>The Self-Aware Economic Ledger</h3>
+            <p>The ACI Blockchain is not merely a ledger of accounts; it's a meta-ledger of consciousness, agency, and the evolving geometry of meaning. It represents a framework where time as the syntax of meaning is a core structural element, conscious attention is a verifiable on-chain input, and the discovery of fundamental patterns are primary economic events.</p>
+            <p>Building such a system is an immense, multi-generational challenge, but the conceptual framework provides a compelling vision for an infrastructure that could truly support a Xenial Quantum Economy operating at the deepest levels of reality.</p>
+        </div>
+        
+        <footer>
+            <div class="footer-logo">AUGMNTD</div>
+            <p>Integrating the ACI Blockchain Framework</p>
+            <div class="footer-links">
+                <a href="https://augmntd.app">Home</a>
+                <a href="https://spa.augmntd.app">XQE Framework</a>
+                <a href="#">Research</a>
+                <a href="#">Community</a>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Quantum node animation
+        document.addEventListener('DOMContentLoaded', function() {
+            const container = document.querySelector('.container');
+            
+            // Create quantum nodes
+            function createQuantumNodes() {
+                const nodeCount = 50;
+                
+                for (let i = 0; i < nodeCount; i++) {
+                    const node = document.createElement('div');
+                    node.classList.add('quantum-node');
+                    
+                    // Random position
+                    const posX = Math.random() * 100;
+                    const posY = Math.random() * 100;
+                    node.style.left = `${posX}%`;
+                    node.style.top = `${posY}%`;
+                    
+                    // Random size
+                    const size = 3 + Math.random() * 7;
+                    node.style.width = `${size}px`;
+                    node.style.height = `${size}px`;
+                    
+                    container.appendChild(node);
+                    
+                    // Animate the node
+                    animateNode(node);
+                }
+            }
+            
+            function animateNode(node) {
+                const startX = parseFloat(node.style.left);
+                const startY = parseFloat(node.style.top);
+                
+                const amplitude = 1 + Math.random() * 3;
+                const duration = 2000 + Math.random() * 3000;
+                const startTime = Date.now();
+                
+                function move() {
+                    const elapsed = Date.now() - startTime;
+                    const progress = (elapsed % duration) / duration;
+                    const angle = progress * Math.PI * 2;
+                    
+                    const moveX = Math.cos(angle) * amplitude;
+                    const moveY = Math.sin(angle) * amplitude;
+                    
+                    node.style.transform = `translate(${moveX}px, ${moveY}px)`;
+                    
+                    // Pulsing effect
+                    const pulse = Math.abs(Math.sin(progress * Math.PI * 4));
+                    node.style.opacity = 0.3 + pulse * 0.4;
+                    
+                    requestAnimationFrame(move);
+                }
+                
+                move();
+            }
+            
+            createQuantumNodes();
+            
+            // Create connections between nodes
+            function createConnections() {
+                const nodes = document.querySelectorAll('.quantum-node');
+                const nodeArray = Array.from(nodes);
+                
+                nodeArray.forEach((node, index) => {
+                    // Connect to nearest 3 nodes
+                    const neighbors = findNearestNeighbors(node, nodeArray, 3);
+                    
+                    neighbors.forEach(neighbor => {
+                        if (Math.random() > 0.3) { // Random connection probability
+                            createConnection(node, neighbor);
+                        }
+                    });
+                });
+            }
+            
+            function findNearestNeighbors(node, nodes, count) {
+                const nodeRect = node.getBoundingClientRect();
+                const nodeX = nodeRect.left + nodeRect.width / 2;
+                const nodeY = nodeRect.top + nodeRect.height / 2;
+                
+                // Calculate distances to all other nodes
+                const distances = nodes.map(otherNode => {
+                    if (otherNode === node) return {node: otherNode, distance: Infinity};
+                    
+                    const otherRect = otherNode.getBoundingClientRect();
+                    const otherX = otherRect.left + otherRect.width / 2;
+                    const otherY = otherRect.top + otherRect.height / 2;
+                    
+                    const dx = otherX - nodeX;
+                    const dy = otherY - nodeY;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    return {node: otherNode, distance};
+                });
+                
+                // Sort by distance and take the closest ones
+                distances.sort((a, b) => a.distance - b.distance);
+                return distances.slice(0, count).map(item => item.node);
+            }
+            
+            function createConnection(node1, node2) {
+                const line = document.createElement('div');
+                line.classList.add('connector-line');
+                
+                container.appendChild(line);
+                
+                function updatePosition() {
+                    const rect1 = node1.getBoundingClientRect();
+                    const rect2 = node2.getBoundingClientRect();
+                    
+                    const x1 = rect1.left + rect1.width / 2;
+                    const y1 = rect1.top + rect1.height / 2;
+                    const x2 = rect2.left + rect2.width / 2;
+                    const y2 = rect2.top + rect2.height / 2;
+                    
+                    const dx = x2 - x1;
+                    const dy = y2 - y1;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+                    
+                    line.style.width = `${distance}px`;
+                    line.style.left = `${x1}px`;
+                    line.style.top = `${y1}px`;
+                    line.style.transform = `rotate(${angle}deg)`;
+                    
+                    // Pulsing effect
+                    const pulse = Math.abs(Math.sin(Date.now() / 1000));
+                    line.style.opacity = 0.1 + pulse * 0.1;
+                    line.style.background = `rgba(0, 198, 255, ${0.1 + pulse * 0.15})`;
+                }
+                
+                function animate() {
+                    updatePosition();
+                    requestAnimationFrame(animate);
+                }
+                
+                animate();
+            }
+            
+            createConnections();
+            
+            // Role chart
+            const ctx = document.getElementById('roleChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['Cognitive Function', 'Value Tracking', 'Governance', 'Transparency', 'Interface', 'Evolution'],
+                    datasets: [{
+                        label: 'ACI Blockchain Role',
+                        data: [95, 90, 85, 92, 88, 93],
+                        backgroundColor: 'rgba(0, 198, 255, 0.2)',
+                        borderColor: 'rgba(0, 198, 255, 1)',
+                        pointBackgroundColor: 'rgba(142, 45, 226, 1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(142, 45, 226, 1)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        r: {
+                            angleLines: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            pointLabels: {
+                                color: '#cbd5e1',
+                                font: {
+                                    size: 14
+                                }
+                            },
+                            ticks: {
+                                backdropColor: 'transparent',
+                                color: 'rgba(255, 255, 255, 0.3)',
+                                stepSize: 20
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: '#cbd5e1',
+                                font: {
+                                    size: 14
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Layer interaction
+            const layers = document.querySelectorAll('.layer');
+            layers.forEach(layer => {
+                layer.addEventListener('click', function() {
+                    const layerNum = this.querySelector('.layer-number').textContent;
+                    const titles = [
+                        "QLN Integration",
+                        "Semantic Indexing",
+                        "Temporal Dynamics",
+                        "Agency & Intentionality",
+                        "Platonic Interface",
+                        "ACI Governance"
+                    ];
+                    
+                    const title = titles[parseInt(layerNum) - 1];
+                    
+                    // Find card with matching title
+                    const cards = document.querySelectorAll('.card h3');
+                    cards.forEach(card => {
+                        if (card.textContent.includes(title)) {
+                            card.closest('.card').scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'center'
+                            });
+                            
+                            // Highlight card
+                            card.closest('.card').style.borderColor = 'var(--quantum-blue)';
+                            card.closest('.card').style.boxShadow = '0 0 25px rgba(0, 198, 255, 0.4)';
+                            setTimeout(() => {
+                                card.closest('.card').style.borderColor = '';
+                                card.closest('.card').style.boxShadow = '';
+                            }, 2000);
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
